@@ -50,14 +50,21 @@ When a user asks a question:
 
 ## Architecture
 
-![Architecture Diagram](images/architecture.png)  
+<img width="544" height="1404" alt="Telegram Chatbot Architecture drawio (1)" src="https://github.com/user-attachments/assets/876fad96-e941-4467-a9f1-087b98671e68" />
 
-Data Sources
-Collection	Source	Granularity
-faq	data/faq.csv	1 document per FAQ row
-tickets	data/tickets.db	1 document per resolved ticket
-guides	data/telecom_guide.pdf	600-character chunks with 100-character overlap
-Project Structure
+
+
+## Data Sources
+
+| Collection | Source | Granularity |
+|------------|--------|-------------|
+| FAQ | `data/faq.csv` | 1 document per FAQ row |
+| Tickets | `data/tickets.db` | 1 document per resolved ticket |
+| Guides | `data/telecom_guide.pdf` | 600-character chunks with 100-character overlap | 
+  
+## Project Structure  
+
+```
 rag-telecom-chatbot/
 │
 ├── app.py                 # Streamlit web interface
@@ -80,6 +87,8 @@ rag-telecom-chatbot/
 ├── pyproject.toml
 ├── uv.lock
 └── .env.example
+```
+
   
   
 ## RAG Retrieval Confidence Thresholding:
