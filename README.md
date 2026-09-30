@@ -50,37 +50,8 @@ When a user asks a question:
 
 ## Architecture
 
-```text
-                         User Question
-                              │
-                              ▼
-                    Question Embedding
-                              │
-                              ▼
-                     Merged Retriever
-                              │
-             ┌────────────────┼────────────────┐
-             ▼                ▼                ▼
-        ChromaDB          ChromaDB         ChromaDB
-           FAQ             Tickets           Guides
-             │                │                │
-          Top 3             Top 3             Top 3
-             │                │                │
-             └────────────────┼────────────────┘
-                              │
-                              ▼
-                     Relevant Documents
-                         (up to 9)
-                              │
-                              ▼
-                    ChatPromptTemplate
-                  Question + Retrieved Context
-                              │
-                              ▼
-                       Qwen via Groq
-                              │
-                              ▼
-                            Answer
+![Architecture Diagram](images/architecture.png)  
+
 Data Sources
 Collection	Source	Granularity
 faq	data/faq.csv	1 document per FAQ row
@@ -109,6 +80,7 @@ rag-telecom-chatbot/
 ├── pyproject.toml
 ├── uv.lock
 └── .env.example
+
 Setup
 Prerequisites
 Python 3.11+
@@ -147,28 +119,4 @@ CLI:
 python main.py
 Regenerating Data
 
-If the source data changes, regenerate and re-ingest the corresponding source.
 
-python data/seed_tickets.py
-python data/generate_pdf.py
-
-Then run the appropriate ingestion script again.
-
-
-### One thing I would change before pushing to GitHub
-
-Do **not** upload:
-
-```text
-.env
-chroma_store/
-
-Your .gitignore should contain:
-
-.env
-chroma_store/
-__pycache__/
-*.pyc
-.venv/
-
-Keep .env.example in GitHub, but never your actual API keys.
