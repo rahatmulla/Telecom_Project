@@ -50,43 +50,21 @@ When a user asks a question:
 
 ## Architecture
 
-```text
-                         User Question
-                              │
-                              ▼
-                    Question Embedding
-                              │
-                              ▼
-                     Merged Retriever
-                              │
-             ┌────────────────┼────────────────┐
-             ▼                ▼                ▼
-        ChromaDB          ChromaDB         ChromaDB
-           FAQ             Tickets           Guides
-             │                │                │
-          Top 3             Top 3             Top 3
-             │                │                │
-             └────────────────┼────────────────┘
-                              │
-                              ▼
-                     Relevant Documents
-                         (up to 9)
-                              │
-                              ▼
-                    ChatPromptTemplate
-                  Question + Retrieved Context
-                              │
-                              ▼
-                       Qwen via Groq
-                              │
-                              ▼
-                            Answer
-Data Sources
-Collection	Source	Granularity
-faq	data/faq.csv	1 document per FAQ row
-tickets	data/tickets.db	1 document per resolved ticket
-guides	data/telecom_guide.pdf	600-character chunks with 100-character overlap
-Project Structure
+<img width="544" height="1404" alt="Telegram Chatbot Architecture drawio (1)" src="https://github.com/user-attachments/assets/876fad96-e941-4467-a9f1-087b98671e68" />
+
+
+
+## Data Sources
+
+| Collection | Source | Granularity |
+|------------|--------|-------------|
+| FAQ | `data/faq.csv` | 1 document per FAQ row |
+| Tickets | `data/tickets.db` | 1 document per resolved ticket |
+| Guides | `data/telecom_guide.pdf` | 600-character chunks with 100-character overlap | 
+  
+## Project Structure  
+
+```
 rag-telecom-chatbot/
 │
 ├── app.py                 # Streamlit web interface
@@ -109,66 +87,4 @@ rag-telecom-chatbot/
 ├── pyproject.toml
 ├── uv.lock
 └── .env.example
-Setup
-Prerequisites
-Python 3.11+
-Groq API key
-Hugging Face token
-Install
-uv sync
-
-Or:
-
-pip install -e .
-Environment Variables
-
-Create a .env file:
-
-GROQ_API_KEY=your_groq_api_key
-HF_TOKEN=your_huggingface_token
-Build the Vector Database
-
-Run the ingestion scripts:
-
-python ingest_faq.py
-python ingest_tickets.py
-python ingest_pdf.py
-
-These scripts process the source data, generate embeddings, and store them in ChromaDB.
-
-Run the Application
-
-Streamlit:
-
-streamlit run app.py
-
-CLI:
-
-python main.py
-Regenerating Data
-
-If the source data changes, regenerate and re-ingest the corresponding source.
-
-python data/seed_tickets.py
-python data/generate_pdf.py
-
-Then run the appropriate ingestion script again.
-
-
-### One thing I would change before pushing to GitHub
-
-Do **not** upload:
-
-```text
-.env
-chroma_store/
-
-Your .gitignore should contain:
-
-.env
-chroma_store/
-__pycache__/
-*.pyc
-.venv/
-
-Keep .env.example in GitHub, but never your actual API keys.
+```
