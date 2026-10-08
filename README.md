@@ -89,16 +89,41 @@ rag-telecom-chatbot/
 └── .env.example
 ```
 
+------------------------------------------------   
   
-  
+## RAG Retrieval Improvements
+
+The chatbot was further enhanced with source citations, confidence-based fallback logic, and retrieval evaluation.
+
+### 1. Source Citations
+
+* Added source citations to generated answers.
+* **FAQ** → FAQ source
+* **Tickets** → Ticket ID
+* **Guide** → PDF page number
+
+### 2. Confidence & Fallback
+
+* Used `similarity_search_with_score()` to check retrieval confidence.
+* Tested relevant and irrelevant questions.
+* Selected **1.0** as the initial similarity threshold.
+* If best score ≤ `1.0` → send context to LLM.
+* If best score > `1.0` → skip LLM and return:
+  **"I don't know, please call 611"**
+
+### 3. Retrieval Evaluation
+
+* Created `evaluate_retrieval.py`.
+* Tested **10 question + expected ticket ID pairs**.
+* Checked whether the correct ticket appeared in the **top 3 results**.
+* Measured **Top-3 Recall**.
+
+___________________________________________________________________  
+
+
 ## RAG Retrieval Confidence Thresholding:
 
 ** Confidence & Fallback Logic **
-
-The system uses 3 Chroma collections:
-FAQ
-Tickets
-Guides
 
 A temporary test was performed using similarity_search_with_score() to measure how closely retrieved documents match the user's question.
 Both relevant telecom questions and irrelevant questions were tested.
@@ -118,88 +143,3 @@ Best score ≤ 1.0?
    ↓
 YES → Send to LLM
 NO  → "I don't know, please call 611"
-
-Project 2 Exercise: Telecom RAG Improvements
-
-The chatbot was further enhanced with source citations, confidence-based fallback logic, and retrieval evaluation.
-
-1. Source Citations
-
-The document formatting and system prompt were modified so that generated answers explicitly identify the source of retrieved information.
-
-Depending on the source, the chatbot can cite:
-
-FAQ: FAQ source
-Support Ticket: Ticket ID
-Technical Guide: Guide page number
-
-This makes the chatbot's answers more traceable and allows the user to understand where the retrieved information came from.
-
-2. Confidence / Fallback Logic
-
-The retrieval process was modified to use similarity_search_with_score() instead of relying only on a standard retriever.
-
-The system checks the similarity score of the retrieved results against the configured threshold.
-
-User Question
-      ↓
-Retrieve documents with scores
-      ↓
-Check best similarity score
-      ↓
-Best score ≤ 1.0?
-   ┌───────┴───────┐
-  YES              NO
-   ↓                ↓
-Send context      Skip LLM
-to LLM              ↓
-   ↓          "I don't know,
-Generate answer  please call 611"
-
-If no retrieved result meets the threshold:
-
-The LLM is not called.
-The chatbot returns the predefined fallback response.
-This reduces the risk of generating unsupported answers from weakly related context.
-3. Retrieval Quality Evaluation
-
-A retrieval evaluation script was created to measure retrieval performance.
-
-The evaluation uses 10 hand-crafted question and expected-ticket ID pairs.
-
-For each test question:
-
-The question is sent to the ticket retriever.
-The top 3 results are retrieved.
-The returned ticket IDs are compared with the expected ticket ID.
-The result is counted as successful if the expected ticket appears within the top 3.
-
-The evaluation measures Top-3 Recall:
-
-Top-3 Recall =
-Number of questions where the expected ticket
-appears in the top 3 results
-/
-Total number of test questions
-
-This provides a simple quantitative way to evaluate retrieval quality rather than relying only on manual testing.
-
-Key RAG Features
-Multi-source retrieval across FAQ, support tickets, and technical documentation
-Separate ChromaDB collections for each knowledge source
-Semantic search using Sentence Transformers
-Top-k retrieval across multiple sources
-Source-aware citations
-Similarity-score-based confidence checking
-LLM fallback prevention for low-confidence retrievals
-Automated Top-3 retrieval evaluation
-Streamlit-based chatbot interface
-Qwen LLM integration through Groq
-Environment Variables
-
-
-
-
-
-
-
