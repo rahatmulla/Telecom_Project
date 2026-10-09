@@ -135,11 +135,11 @@ Based on these initial tests, a starting threshold of 1.0 was selected.
 
 The intended fallback flow is:
 
-Question
-   ↓
-Search Chroma
-   ↓
-Best score ≤ 1.0?
-   ↓
-YES → Send to LLM
-NO  → "I don't know, please call 611"
+Question  
+   ↓  
+Search Chroma  
+   ↓  
+Best score ≤ 1.0?  
+   ↓  
+YES → Send to LLM  
+NO  → "I don't know, please call 611"  
